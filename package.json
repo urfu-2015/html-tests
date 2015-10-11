@@ -1,0 +1,21 @@
+{
+  "name": "Markup-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "hhttps://github.com/urfu-2015/html-test-suite"
+  },
+  "author": "Anton Grischenko <f0rmateg@yandex.ru>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/urfu-2015/html-test-suite/issues"
+  },
+  "homepage": "https://github.com/urfu-2015/html-test-suite",
+  "devDependencies": {
+    "mocha": "^2.3.3",
+    "should": "^7.1.0"
+  }
+}
