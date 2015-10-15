@@ -30,9 +30,10 @@ exports.maxLineLength = function (length) {
     return new RegExp('\\s*[^\\s][^\\n\\r]{' + length + '}');
 };
 
-exports.twoLineBreaksInARow = function () {
-    return /\n[\s^\n\r]*\n/;
-};
+//WIP
+//exports.twoLineBreaksInARow = function () {
+//    return /\n[\s^\n\r]*\n/;
+//};
 
 exports.spaceBeforeEquals = function () {
     return /\<[^\>]+\s\=/;

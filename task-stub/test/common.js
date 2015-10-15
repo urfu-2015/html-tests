@@ -134,14 +134,15 @@ describe('Сodestyle.', function () {
         hasViolation.should.be.eql(false);
     });
 
-    it('Не должно быть двух и более идущих подряд пустых строк.', function () {
-        var pattern = regExps.spaceBeforeClosingTag();
-        var hasViolation = pattern.test(html);
-
-        if (hasViolation) {
-            error(pattern, 'Две или более идущие подряд пустые строки.');
-        }
-
-        hasViolation.should.be.eql(false);
-    });
+    //WIP
+    //it('Не должно быть двух и более идущих подряд пустых строк.', function () {
+    //    var pattern = regExps.twoLineBreaksInARow();
+    //    var hasViolation = pattern.test(html);
+    //
+    //    if (hasViolation) {
+    //        error(pattern, 'Две или более идущие подряд пустые строки.');
+    //    }
+    //
+    //    hasViolation.should.be.eql(false);
+    //});
 });

@@ -1,9 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "test": "mocha"
+    "test": "mocha ./node_modules/html-tests/task-stub/test"
   },
   "dependencies": {
+    "html-tests": "https://github.com/urfu-2015/html-test-suite.git#stable",
     "mocha": "^2.3.3",
     "should": "^7.1.0"
   }

@@ -53,25 +53,26 @@ describe('Длинные строки.', function () {
     });
 });
 
-describe('Пустые строки.', function () {
-    var pattern = regExps.twoLineBreaksInARow();
-
-    it('Должны обнаруживаться две пустые строки подряд.', function () {
-        var html = largeHtml + '\n\n<div>слово</div>';
-
-        pattern.test(html).should.be.eql(true);
-    });
-
-    it('Должны обнаруживаться две пустые строки подряд, в перемешку с пробелами.', function () {
-        var html = largeHtml + ' \n \n <div>слово</div>';
-
-        pattern.test(html).should.be.eql(true);
-    });
-
-    it('Не должны обнаруживаться две пустые строки подряд, если их нет.', function () {
-        pattern.test(largeHtml).should.be.eql(false);
-    });
-});
+//WIP
+//describe('Пустые строки.', function () {
+//    var pattern = regExps.twoLineBreaksInARow();
+//
+//    it('Должны обнаруживаться две пустые строки подряд.', function () {
+//        var html = largeHtml + '\n\n<div>слово</div>';
+//
+//        pattern.test(html).should.be.eql(true);
+//    });
+//
+//    it('Должны обнаруживаться две пустые строки подряд, в перемешку с пробелами.', function () {
+//        var html = largeHtml + ' \n \n <div>слово</div>';
+//
+//        pattern.test(html).should.be.eql(true);
+//    });
+//
+//    it('Не должны обнаруживаться две пустые строки подряд, если их нет.', function () {
+//        pattern.test(largeHtml).should.be.eql(false);
+//    });
+//});
 
 describe('Отступы.', function () {
     it('Поиск символов табуляции.', function () {
