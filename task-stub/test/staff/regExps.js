@@ -45,3 +45,7 @@ exports.twoLineBreaksInARow = function () {
 exports.wrongQuoteInAttribute = function () {
     return new RegExp('<\\s*[^\\s>]+[^>]*\\s[^\\s>=]+=[^"][^>]*>', 'g');
 };
+
+exports.imgWithoutAlt = function () {
+    return new RegExp('<\\s*img\\s[^alt="]*', 'g');
+};

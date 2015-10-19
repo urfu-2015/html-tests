@@ -306,6 +306,22 @@ describe('Использование и оформление атрибутов.
 
         });
     });
+
+    describe('alt в картинках', function () {
+        it('Должны обнаруживаться картинки без alt', function () {
+            var html = largeHtml + '<img src="">';
+            utils.findImagesWithoutAlt(html, false).should.be.eql(1);
+        });
+
+        it('Должны обнаруживаться картинки с пустым alt', function () {
+            var html = largeHtml + '<img src="" alt="">';
+            utils.findImagesWithoutAlt(html, false).should.be.eql(1);
+        });
+
+        it('Не должны обнаруживаться картинки без alt, если их нет', function () {
+            utils.findImagesWithoutAlt(largeHtml, false).should.be.eql(0);
+        });
+    });
 });
 
 describe('Неправильная вложенность тегов.', function () {

@@ -61,8 +61,28 @@ exports.getBlockInsideInline = function (html, showMessage) {
 };
 
 exports.getBlockInsideP = function (html, showMessage) {
-    var msg = showMessage !== false ? 'Блочный элемент внутри тега <p>.' : false;
+    var msg = showMessage !== false ? 'Блочный элемент {{prohibited}} внутри тега <p>.' : false;
     return checkIncorrectBlocksLocation(html, ['p'], blockElements, msg);
+};
+
+exports.findImagesWithoutAlt = function (html, showMessage) {
+    var pattern = /<\s*img[^>]*>/ig;
+    var images = html.match(pattern) || [];
+    var found = 0;
+
+    images.forEach(function (image) {
+        var hasAlt = /\salt="[^"]+"/.test(image);
+
+        if (!hasAlt) {
+            if (showMessage !== false) {
+                error(pattern, 'Картинка с отсутствующим или пустым атрибутом alt.', html);
+            }
+
+            found++;
+        }
+    });
+
+    return found;
 };
 
 function checkIncorrectBlocksLocation (html, parents, prohibitedChildren, message) {
