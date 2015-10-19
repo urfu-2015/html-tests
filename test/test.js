@@ -40,7 +40,13 @@ describe('Длинные строки.', function () {
             'разработчики, вступили в новую эпоху отрасли, которая нам приносит не только «хлеб с маслом», но и' +
             'доставляет массу удовольствия.'; //210 символов
 
-        pattern.test(html).should.be.eql(true);
+        var found = false;
+
+        try {
+            found = html.match(pattern)[0];
+        } catch(e) { }
+
+        (found).should.not.be.eql(false);
     });
 
     it('Не должны обнаруживаться длинные строки там, где их нет.', function () {
@@ -49,9 +55,16 @@ describe('Длинные строки.', function () {
             'Короткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка' +
             '\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка';
 
-        pattern.test(html).should.be.eql(false);
+        var found = false;
+
+        try {
+            found = html.match(pattern)[0];
+        } catch(e) { }
+
+        (found).should.be.eql(false);
     });
 });
+
 
 describe('Пустые строки.', function () {
     var pattern = regExps.twoLineBreaksInARow();
@@ -69,7 +82,8 @@ describe('Пустые строки.', function () {
     });
 
     it('Не должны обнаруживаться две пустые строки подряд, если их нет.', function () {
-        pattern.test(largeHtml).should.be.eql(false);
+        var html = largeHtml + '<div>слово</div>';
+        pattern.test(html).should.be.eql(false);
     });
 });
 
@@ -85,14 +99,14 @@ describe('Отступы.', function () {
         var html = largeHtml + '\n   <blockquote>Слово</blockquote>'; // 3 пробела
         var found = utils.wrongSpacesChecker(html);
 
-        (found > 0).should.be.eql(true);
+        found.should.be.eql(1);
     });
 
     it('Не должны обнаруживаться отступы, кратные четырем пробелам.', function () {
         var html = largeHtml + '\n    <blockquote>Слово   </blockquote>   '; // 4 пробела
         var found = utils.wrongSpacesChecker(html);
 
-        (found).should.be.eql(0);
+        found.should.be.eql(0);
     });
 });
 
@@ -120,21 +134,22 @@ describe('Поиск пробелов в неположенных местах.'
     });
 
     describe('Выражение для поиска пробелов перед закрывающими тегами.', function () {
-        var pattern = regExps.spaceBeforeClosingTag();
-
         it('Должен обнаруживаться пробел перед закрывающи тегом-1.', function () {
+            var pattern = regExps.spaceBeforeClosingTag();
             var html = largeHtml + '\n<p>Слово </p>';
 
             pattern.test(html).should.be.eql(true);
         });
 
         it('Должен обнаруживаться пробел перед закрывающи тегом-2.', function () {
+            var pattern = regExps.spaceBeforeClosingTag();
             var html = largeHtml + '\n<p>Слово<span>тест </span></p>';
 
             pattern.test(html).should.be.eql(true);
         });
 
         it('Не должены обнаруживаться пробелы перед закрывающими тегами, если таких пробелов нет.', function () {
+            var pattern = regExps.spaceBeforeClosingTag();
             var html = largeHtml + '\n< p >Слово< span >тест< /span >< /p >';
 
             pattern.test(html).should.be.eql(false);
@@ -142,21 +157,23 @@ describe('Поиск пробелов в неположенных местах.'
     });
 
     describe('Пробелы после символа <.', function () {
-        var pattern = regExps.spaceAfterLessSign();
-
         it('Должен обнаруживаться пробел после символа <.', function () {
+            var pattern = regExps.spaceAfterLessSign();
             var html = largeHtml + '\n< p>Слово</p>';
 
             pattern.test(html).should.be.eql(true);
         });
 
         it('Должен обнаруживаться перенос строки после символа <.', function () {
+            var pattern = regExps.spaceAfterLessSign();
             var html = largeHtml + '\n<\np>Слово</p>';
 
-            pattern.test(html).should.be.eql(true);
+            var found = pattern.test(html);
+            found.should.be.eql(true);
         });
 
-        it('Не обнаруживаться пробел после &lt;', function () {
+        it('Не должен обнаруживаться пробел после &lt;', function () {
+            var pattern = regExps.spaceAfterLessSign();
             var html = largeHtml + '\n&lt; слово';
 
             pattern.test(html).should.be.eql(false);
@@ -247,3 +264,49 @@ describe('Запрещенные атрибуты элементов.', function
     });
 });
 
+describe('Неправильная вложенность тегов.', function () {
+    describe('Обнаружение блочных тегов внутри строчных.', function () {
+        it('Должен обнаруживаться <div> в <span> в простых ситуациях', function () {
+            var html = 'Начало строки\n<span><div>bad</div></span>\n' +
+                '\nКонец строки<div>Слово</div>' +
+                '\n<span>\n<div></div></span>';
+
+            utils.getBlockInsideInline(html, false).should.be.eql(1);
+        });
+
+        it('Должен обнаруживаться <div> в <span> в сложных ситуациях.', function () {
+            var html = largeHtml + '\n<span>\n  Некий текст<div>Слово</div></span>';
+
+            utils.getBlockInsideInline(html, false).should.be.eql(1);
+        });
+    });
+
+    describe('Обнаружение блочных теги внутри параграфов.', function () {
+        it('Должен обнаруживаться <div> внутри <p>.', function () {
+            var html = largeHtml + '\n<p>\n  Некий текст<div>Слово</div></p>';
+            utils.getBlockInsideP(html, false).should.be.eql(1);
+        });
+
+        it('Должен обнаруживаться <table> внутри <p>.', function () {
+            var html = largeHtml + '\n<p>\n  Некий текст<table>Слово</table></p>';
+            utils.getBlockInsideP(html, false).should.be.eql(1);
+        });
+
+        it('Не должег обнаруживаться <table> внутри <p>, если его нет.', function () {
+            var html = largeHtml + '\n<p>\n  Некий текст</p><table>Слово</table>';
+            utils.getBlockInsideP(html, false).should.be.eql(0);
+        });
+    });
+});
+
+describe('Обнаружение закрытия пустых тегов.', function () {
+    it('Должен обнаруживаться закрытый тег <meta>.', function () {
+        var html = largeHtml + '<meta someattr="test" />';
+
+        utils.getClosedEmptyElements(html).should.be.eql(1);
+    });
+
+    it('Не должны обнаруживаться закрытые пустые теги, если их нет.', function () {
+        utils.getClosedEmptyElements(largeHtml).should.be.eql(0);
+    });
+});

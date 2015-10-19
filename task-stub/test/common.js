@@ -135,13 +135,27 @@ describe('Сodestyle.', function () {
     });
 
     it('Не должно быть двух и более идущих подряд пустых строк.', function () {
-        var pattern = regExps.spaceBeforeClosingTag();
+        var pattern = regExps.twoLineBreaksInARow();
         var hasViolation = pattern.test(html);
 
         if (hasViolation) {
-            error(pattern, 'Две или более идущие подряд пустые строки.');
+            error(pattern, 'После нее идут две или более пустые строки.');
         }
 
         hasViolation.should.be.eql(false);
+    });
+
+    describe('Проверка корректности вложенности блоков.', function () {
+        it('Не должно быть блочных тегов внутри строчных.', function () {
+            utils.getBlockInsideInline(html).should.be.eql(0);
+        });
+
+        it('Не должно быть блочных тегов внутри параграфов (<p>).', function () {
+            utils.getBlockInsideP(html).should.be.eql(0);
+        });
+    });
+
+    it('Не должно быть закрытых пустых тегов.', function () {
+        utils.getClosedEmptyElements(html).should.be.eql(0);
     });
 });
