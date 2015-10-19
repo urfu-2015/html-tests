@@ -88,7 +88,7 @@ describe('Сodestyle.', function () {
 
     describe('Использование и оформление атрибутов.', function () {
         describe('Запрещенные атрибуты элементов.', function () {
-            [ 'style', 'border' ].forEach(function (attr) {
+            [ 'style', 'border', 'align' ].forEach(function (attr) {
                 it('Не должно быть атрибута ' + attr + '.', function () {
                     var pattern = regExps.attrs(attr);
                     var hasViolation = pattern.test(html);
