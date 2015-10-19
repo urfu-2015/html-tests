@@ -86,40 +86,53 @@ describe('Сodestyle.', function () {
         hasViolation.should.be.eql(false);
     });
 
-    it('Не должно быть пробелов перед = в тегах', function () {
-        var pattern = regExps.spaceBeforeEquals();
-        var hasViolation = pattern.test(html);
+    describe('Использование и оформление атрибутов.', function () {
+        describe('Запрещенные атрибуты элементов.', function () {
+            [ 'style', 'border' ].forEach(function (attr) {
+                it('Не должно быть атрибута ' + attr + '.', function () {
+                    var pattern = regExps.attrs(attr);
+                    var hasViolation = pattern.test(html);
 
-        if (hasViolation) {
-            error(pattern, 'Пробел перед "=".');
-        }
+                    if (hasViolation) {
+                        error(pattern, 'Использование атрибута ' + attr + '.');
+                    }
 
-        hasViolation.should.be.eql(false);
-    });
-
-    it('Не должно быть пробелов после = в тегах.', function () {
-        var pattern = regExps.spaceAfterEquals();
-        var hasViolation = pattern.test(html);
-
-        if (hasViolation) {
-            error(pattern, 'Пробел после "=".');
-        }
-
-        hasViolation.should.be.eql(false);
-    });
-
-    describe('Запрещенные атрибуты элементов.', function () {
-        [ 'style', 'border' ].forEach(function (attr) {
-            it('Не должно быть атрибута ' + attr + '.', function () {
-                var pattern = regExps.attrs(attr);
-                var hasViolation = pattern.test(html);
-
-                if (hasViolation) {
-                    error(pattern, 'Использование атрибута ' + attr + '.');
-                }
-
-                hasViolation.should.be.eql(false);
+                    hasViolation.should.be.eql(false);
+                });
             });
+        });
+
+        it('Должны использоваться двойные кавычки значениях атрибутов.', function () {
+            var pattern = regExps.wrongQuoteInAttribute();
+            var hasViolation = pattern.test(html);
+
+            if (hasViolation) {
+                error(pattern, 'Неправильные или отсутствующие кавычки у значений атрибута.');
+            }
+
+            hasViolation.should.be.eql(false);
+        });
+
+        it('Не должно быть пробелов после = при использовании атрибутов.', function () {
+            var pattern = regExps.spaceAfterEquals();
+            var hasViolation = pattern.test(html);
+
+            if (hasViolation) {
+                error(pattern, 'Пробел после "=".');
+            }
+
+            hasViolation.should.be.eql(false);
+        });
+
+        it('Не должно быть пробелов перед = при использовании атрибутов.', function () {
+            var pattern = regExps.spaceBeforeEquals();
+            var hasViolation = pattern.test(html);
+
+            if (hasViolation) {
+                error(pattern, 'Пробел перед "=".');
+            }
+
+            hasViolation.should.be.eql(false);
         });
     });
 

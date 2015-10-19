@@ -1,5 +1,5 @@
 exports.tag = function (tag) {
-    return new RegExp('\\<\\s*' + tag + '(\\s.*)?\\>', 'g');
+    return new RegExp('<\\s*' + tag + '(\\s.*)?>', 'g');
 };
 
 exports.tabs = function () {
@@ -7,23 +7,23 @@ exports.tabs = function () {
 };
 
 exports.spaceAfterTag = function () {
-    return new RegExp('\<[^\/\>]+\>[^\\S\\r\\n]', 'g');
+    return new RegExp('<[^\/>]+>[^\\S\\r\\n]', 'g');
 };
 
 exports.spaceBeforeClosingTag = function () {
-    return new RegExp('[^\\s]+[^\\S\\r\\n]\<\/[-\\w]+\>', 'ig');
+    return new RegExp('[^\\s]+[^\\S\\r\\n]<\/[-\\w]+>', 'ig');
 };
 
 exports.attrs = function (attr) {
-    return new RegExp('\<.+' + attr + '\\s*=[^<>]*\>', 'g');
+    return new RegExp('<.+' + attr + '\\s*=[^<>]*>', 'g');
 };
 
 exports.spaceAfterLessSign = function () {
-    return new RegExp('\<\\s', 'g');
+    return new RegExp('<\\s', 'g');
 };
 
 exports.spaceBeforeLessSign = function () {
-    return new RegExp('\<\\s', 'g');
+    return new RegExp('<\\s', 'g');
 };
 
 exports.maxLineLength = function (length) {
@@ -31,13 +31,17 @@ exports.maxLineLength = function (length) {
 };
 
 exports.spaceBeforeEquals = function () {
-    return new RegExp('\<[^\>]+\\s\=', 'g');
+    return new RegExp('<[^>]+\\s\=', 'g');
 };
 
 exports.spaceAfterEquals = function () {
-    return new RegExp('\<[^\>]+\=\\s', 'g');
+    return new RegExp('<[^>]+\=\\s', 'g');
 };
 
 exports.twoLineBreaksInARow = function () {
     return new RegExp('\\n[^\\S\\n\\r]*\\n', 'g');
+};
+
+exports.wrongQuoteInAttribute = function () {
+    return new RegExp('<\\s*[^\\s>]+[^>]*\\s[^\\s>=]+=[^"][^>]*>', 'g');
 };

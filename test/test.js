@@ -179,87 +179,123 @@ describe('Поиск пробелов в неположенных местах.'
             pattern.test(html).should.be.eql(false);
         });
     });
-
-    describe('Пробелы при написании атрибутов.', function () {
-        it('Должен обнаруживаться пробел перед =', function () {
-            var pattern = regExps.spaceBeforeEquals();
-            var html = largeHtml + '<p data-some="some" class ="some">Слово</p>';
-
-            pattern.test(html).should.be.eql(true);
-        });
-
-        it('Не должен обнаруживаться пробел перед =, если его нет', function () {
-            var pattern = regExps.spaceBeforeEquals();
-            var html = largeHtml + '<p data-some="some" class="some">Слово</p>';
-
-            pattern.test(html).should.be.eql(false);
-        });
-
-        it('Не должен обнаруживаться пробел перед = вне тегов', function () {
-            var pattern = regExps.spaceBeforeEquals();
-            var html = largeHtml + '<p data-some="some" class="some">Слово = слово</p>';
-
-            pattern.test(html).should.be.eql(false);
-        });
-
-        it('Должен обнаруживаться пробел после =', function () {
-            var pattern = regExps.spaceAfterEquals();
-            var html = largeHtml + '<p data-some="some" class= "some">Слово</p>';
-
-            pattern.test(html).should.be.eql(true);
-        });
-
-        it('Не должен обнаруживаться пробел после =, если его нет', function () {
-            var pattern = regExps.spaceAfterEquals();
-            var html = largeHtml + '<p data-some="some" class="some">Слово</p>';
-
-            pattern.test(html).should.be.eql(false);
-        });
-
-        it('Не должен обнаруживаться пробел перед = вне тегов', function () {
-            var pattern = regExps.spaceAfterEquals();
-            var html = largeHtml + '<p data-some="some" class="some">Слово = слово</p>';
-
-            pattern.test(html).should.be.eql(false);
-        });
-    });
 });
 
-describe('Запрещенные атрибуты элементов.', function () {
-    it('Обнаружение атрибута style.', function () {
-        var html = largeHtml + '\n<p style="color: #000;">Слово </p>';
-        var pattern = regExps.attrs('style');
+describe('Использование и оформление атрибутов.', function () {
+    describe('Обнаружение запрещенных атрибутов.', function () {
+        it('Обнаружение атрибута style.', function () {
+            var html = largeHtml + '\n<p style="color: #000;">Слово </p>';
+            var pattern = regExps.attrs('style');
 
-        pattern.test(html).should.be.eql(true);
+            pattern.test(html).should.be.eql(true);
+        });
+
+        describe('Обнаружение атрибута border.', function () {
+            it('border="1"', function () {
+                var html = largeHtml + '\n<img border="1">';
+                var pattern = regExps.attrs('border');
+
+                pattern.test(html).should.be.eql(true);
+            });
+
+            it('border=\'1\'', function () {
+                var html = largeHtml + '\n<img border=\'1\'>';
+                var pattern = regExps.attrs('border');
+
+                pattern.test(html).should.be.eql(true);
+            });
+
+            it('border=1', function () {
+                var html = largeHtml + '\n<img border=1>';
+                var pattern = regExps.attrs('border');
+
+                pattern.test(html).should.be.eql(true);
+            });
+
+            it('border не должен обнаруживаться в различных ситуациях', function () {
+                var html = largeHtml + '\n<table class="border" style="border: 1px solid #000;">border</table>';
+                var pattern = regExps.attrs('border');
+
+                pattern.test(html).should.be.eql(false);
+            });
+        });
     });
 
-    describe('Обнаружение атрибута border.', function () {
-        it('border="1"', function () {
-            var html = largeHtml + '\n<img border="1">';
-            var pattern = regExps.attrs('border');
+    describe('Обнаружение неправильного оформления атрибутов.', function () {
+        describe('Пробелы при написании атрибутов.', function () {
+            it('Должен обнаруживаться пробел перед =', function () {
+                var pattern = regExps.spaceBeforeEquals();
+                var html = largeHtml + '<p data-some="some" class ="some">Слово</p>';
 
-            pattern.test(html).should.be.eql(true);
+                pattern.test(html).should.be.eql(true);
+            });
+
+            it('Не должен обнаруживаться пробел перед =, если его нет', function () {
+                var pattern = regExps.spaceBeforeEquals();
+                var html = largeHtml + '<p data-some="some" class="some">Слово</p>';
+
+                pattern.test(html).should.be.eql(false);
+            });
+
+            it('Не должен обнаруживаться пробел перед = вне тегов', function () {
+                var pattern = regExps.spaceBeforeEquals();
+                var html = largeHtml + '<p data-some="some" class="some">Слово = слово</p>';
+
+                pattern.test(html).should.be.eql(false);
+            });
+
+            it('Должен обнаруживаться пробел после =', function () {
+                var pattern = regExps.spaceAfterEquals();
+                var html = largeHtml + '<p data-some="some" class= "some">Слово</p>';
+
+                pattern.test(html).should.be.eql(true);
+            });
+
+            it('Не должен обнаруживаться пробел после =, если его нет', function () {
+                var pattern = regExps.spaceAfterEquals();
+                var html = largeHtml + '<p data-some="some" class="some">Слово</p>';
+
+                pattern.test(html).should.be.eql(false);
+            });
+
+            it('Не должен обнаруживаться пробел перед = вне тегов', function () {
+                var pattern = regExps.spaceAfterEquals();
+                var html = largeHtml + '<p data-some="some" class="some">Слово</p>';
+
+                pattern.test(html).should.be.eql(false);
+            });
         });
 
-        it('border=\'1\'', function () {
-            var html = largeHtml + '\n<img border=\'1\'>';
-            var pattern = regExps.attrs('border');
+        describe('Использование кавычек в атрибутах.', function () {
+            it('Должны обнаруживаться одиночные кавычки.', function () {
+                var pattern = regExps.wrongQuoteInAttribute();
 
-            pattern.test(html).should.be.eql(true);
-        });
+                var html = largeHtml + "<p data-some='some'>Слово</p>";
+                pattern.test(html).should.be.eql(true);
+            });
 
-        it('border=1', function () {
-            var html = largeHtml + '\n<img border=1>';
-            var pattern = regExps.attrs('border');
+            it('Должно обнаруживаться отсутствие кавычек в атрибутах.', function () {
+                var pattern = regExps.wrongQuoteInAttribute();
 
-            pattern.test(html).should.be.eql(true);
-        });
+                var html = largeHtml + '<p data-some=some>Слово</p>';
+                pattern.test(html).should.be.eql(true);
+            });
 
-        it('border не должен обнаруживаться в различных ситуациях', function () {
-            var html = largeHtml + '\n<table class="border" style="border: 1px solid #000;">border</table>';
-            var pattern = regExps.attrs('border');
+            it('Не должны обнаруживаться неправильные кавычки при использовании одиночных атрибутов.', function () {
+                var pattern = regExps.wrongQuoteInAttribute();
 
-            pattern.test(html).should.be.eql(false);
+                var html = largeHtml + '<input disabled>';
+                pattern.test(html).should.be.eql(false);
+            });
+
+            it('Не должно обнаруживаться неправильное использование кавычек, если символ = есть в значении атрибута.', function () {
+                var pattern = regExps.wrongQuoteInAttribute();
+
+                var html = largeHtml + '<img src="https://lh4.ggpht.com/0E2SWOpJ_lO2-1KexN7m9E6-kn_q1GYRtNnYAgHX-zWDAkqSzcif73Z50CSkXkd6oOxx=h900">';
+                pattern.test(html).should.be.eql(false);
+            });
+
+
         });
     });
 });
