@@ -31,15 +31,15 @@ exports.maxLineLength = function (length) {
 };
 
 exports.spaceBeforeEquals = function () {
-    return new RegExp('<[^>]+\\s\=', 'g');
+    return new RegExp('<\\s*[^\\s>]+[^>]*\\s[^\\s>=]+[^\\n\\S]=[^>]*>', 'g');
 };
 
 exports.spaceAfterEquals = function () {
-    return new RegExp('<[^>]+\=\\s', 'g');
+    return new RegExp('<\\s*[^\\s>]+[^>]*\\s[^\\s>=]+=[^\\n\\S][^>]*>', 'g');
 };
 
 exports.twoLineBreaksInARow = function () {
-    return new RegExp('\\n[^\\S\\n\\r]*\\n', 'g');
+    return new RegExp('\\n[^\\S\\n\\r]*\\n[^\\S\\n\\r]*\\n', 'g');
 };
 
 exports.wrongQuoteInAttribute = function () {

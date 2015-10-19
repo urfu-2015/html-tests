@@ -67,22 +67,23 @@ describe('Длинные строки.', function () {
 
 
 describe('Пустые строки.', function () {
-    var pattern = regExps.twoLineBreaksInARow();
-
     it('Должны обнаруживаться две пустые строки подряд.', function () {
+        var pattern = regExps.twoLineBreaksInARow();
         var html = largeHtml + '\n\n<div>слово</div>';
 
         pattern.test(html).should.be.eql(true);
     });
 
-    it('Должны обнаруживаться две пустые строки подряд, в перемешку с пробелами.', function () {
-        var html = largeHtml + ' \n \n <div>слово</div>';
+    it('Должны обнаруживаться две пустые строки подряд в перемешку с пробелами.', function () {
+        var pattern = regExps.twoLineBreaksInARow();
+        var html = largeHtml + '\n  \n  <div>слово</div>';
 
         pattern.test(html).should.be.eql(true);
     });
 
     it('Не должны обнаруживаться две пустые строки подряд, если их нет.', function () {
-        var html = largeHtml + '<div>слово</div>';
+        var pattern = regExps.twoLineBreaksInARow();
+        var html = largeHtml + '<div> \n  \n <div>слово</div>';
         pattern.test(html).should.be.eql(false);
     });
 });
@@ -254,6 +255,13 @@ describe('Использование и оформление атрибутов.
             it('Не должен обнаруживаться пробел после =, если его нет', function () {
                 var pattern = regExps.spaceAfterEquals();
                 var html = largeHtml + '<p data-some="some" class="some">Слово</p>';
+
+                pattern.test(html).should.be.eql(false);
+            });
+
+            it('Не должно обнаруживаться пробел после =, если = находится внутри значения атрибута.', function () {
+                var pattern = regExps.spaceAfterEquals();
+                var html = largeHtml + '<video src="https://ya.ru?ratebypass= \n"';
 
                 pattern.test(html).should.be.eql(false);
             });
