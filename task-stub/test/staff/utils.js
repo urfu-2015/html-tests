@@ -71,7 +71,7 @@ exports.findImagesWithoutAlt = function (html, showMessage) {
     var found = 0;
 
     images.forEach(function (image) {
-        var hasAlt = /\salt="[^"]+"/.test(image);
+        var hasAlt = /\salt=(?!(""|''))/.test(image);
 
         if (!hasAlt) {
             if (showMessage !== false) {

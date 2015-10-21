@@ -313,8 +313,13 @@ describe('Использование и оформление атрибутов.
             utils.findImagesWithoutAlt(html, false).should.be.eql(1);
         });
 
-        it('Должны обнаруживаться картинки с пустым alt', function () {
+        it('Должны обнаруживаться картинки с пустым alt с двойными кавычками', function () {
             var html = largeHtml + '<img src="" alt="">';
+            utils.findImagesWithoutAlt(html, false).should.be.eql(1);
+        });
+
+        it('Должны обнаруживаться картинки с пустым alt с одинаркными кавычками', function () {
+            var html = largeHtml + '<img src="" alt=\'\'>';
             utils.findImagesWithoutAlt(html, false).should.be.eql(1);
         });
 
