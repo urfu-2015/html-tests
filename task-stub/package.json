@@ -6,7 +6,6 @@
   "dependencies": {
     "html-tests": "https://github.com/urfu-2015/html-test-suite.git#stable",
     "mocha": "^2.3.3",
-    "should": "^7.1.0",
-    "html-tests": "https://github.com/urfu-2015/html-test-suite.git#stable"
+    "should": "^7.1.0"
   }
 }

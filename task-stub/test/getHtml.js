@@ -6,7 +6,7 @@ require('should');
 var fs = require('fs');
 var files = fs.readdirSync('.');
 
-files = files.filter(function(file){
+files = files.filter(file => {
     return fs.statSync(file).isFile() && /\.html$/.test(file);
 });
 
