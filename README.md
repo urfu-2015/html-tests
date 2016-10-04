@@ -1,6 +1,10 @@
 # Тесты для HTML кода
 [![Build Status](https://travis-ci.org/urfu-2015/html-test-suite.svg)](https://travis-ci.org/urfu-2015/html-test-suite)
 
+## Использование
+Добавить в `package.json` в секцию `scripts`:  
+`"test-html": "mocha ./node_modules/html-tests/task-stub/test"`
+
 ## Проверки
 * Наличие 2х и более html-файла в корне проекта;
 * Deprecated-теги ('i', 'b', 'font', 'center', 'marquee', 'u', 's');
