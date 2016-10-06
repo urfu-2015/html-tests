@@ -10,61 +10,6 @@ var fs = require('fs');
 
 var largeHtml = fs.readFileSync('test/html/large.html', 'utf-8');
 
-describe('Тесты выражения поиска тегов.', function () {
-    it('Должен корректно находиться <i>', function () {
-        var pattern = regExps.tag('i');
-        var html = largeHtml + '\n<i>Слово</i>';
-
-        pattern.test(html).should.be.eql(true);
-    });
-
-    it('Должен корректно находиться < i data-some="some">', function () {
-        var pattern = regExps.tag('i');
-        var html = largeHtml + '\n< i data-some="some">Слово</i>';
-
-        pattern.test(html).should.be.eql(true);
-    });
-
-    it('Не должен находиться <b>, если его нет.', function () {
-        var pattern = regExps.tag('b');
-        var html = largeHtml + '\n<blockquote>Слово</blockquote>';
-
-        pattern.test(html).should.be.eql(false);
-    });
-});
-
-describe('Длинные строки.', function () {
-    it('Должны обнаруживаться строки длиной более 110 символов.', function () {
-        var pattern = regExps.maxLineLength(110);
-        var html = largeHtml + '\n	С появлением частичной поддержки ECMAScript 2015 в Chrome 45 и NodeJS 4, мы, веб' +
-            'разработчики, вступили в новую эпоху отрасли, которая нам приносит не только «хлеб с маслом», но и' +
-            'доставляет массу удовольствия.'; //210 символов
-
-        var found = false;
-
-        try {
-            found = html.match(pattern)[0];
-        } catch(e) { }
-
-        (found).should.not.be.eql(false);
-    });
-
-    it('Не должны обнаруживаться длинные строки там, где их нет.', function () {
-        var pattern = regExps.maxLineLength(110);
-        var html = largeHtml + '\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\n' +
-            'Короткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка' +
-            '\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка\nКороткая строка';
-
-        var found = false;
-
-        try {
-            found = html.match(pattern)[0];
-        } catch(e) { }
-
-        (found).should.be.eql(false);
-    });
-});
-
 
 describe('Пустые строки.', function () {
     it('Должны обнаруживаться две пустые строки подряд.', function () {
@@ -85,29 +30,6 @@ describe('Пустые строки.', function () {
         var pattern = regExps.twoLineBreaksInARow();
         var html = largeHtml + '<div> \n  \n <div>слово</div>';
         pattern.test(html).should.be.eql(false);
-    });
-});
-
-describe('Отступы.', function () {
-    it('Поиск символов табуляции.', function () {
-        var pattern = regExps.tabs();
-        var html = largeHtml + '\n	<blockquote>Слово</blockquote>';
-
-        pattern.test(html).should.be.eql(true);
-    });
-
-    it('Должны обнаруживаться отступы, не кратные четырем пробелам.', function () {
-        var html = largeHtml + '\n   <blockquote>Слово</blockquote>'; // 3 пробела
-        var found = utils.wrongSpacesChecker(html);
-
-        found.should.be.eql(1);
-    });
-
-    it('Не должны обнаруживаться отступы, кратные четырем пробелам.', function () {
-        var html = largeHtml + '\n    <blockquote>Слово   </blockquote>   '; // 4 пробела
-        var found = utils.wrongSpacesChecker(html);
-
-        found.should.be.eql(0);
     });
 });
 
@@ -273,61 +195,7 @@ describe('Использование и оформление атрибутов.
                 pattern.test(html).should.be.eql(false);
             });
         });
-
-        describe('Использование кавычек в атрибутах.', function () {
-            it('Должны обнаруживаться одиночные кавычки.', function () {
-                var pattern = regExps.wrongQuoteInAttribute();
-
-                var html = largeHtml + "<p data-some='some'>Слово</p>";
-                pattern.test(html).should.be.eql(true);
-            });
-
-            it('Должно обнаруживаться отсутствие кавычек в атрибутах.', function () {
-                var pattern = regExps.wrongQuoteInAttribute();
-
-                var html = largeHtml + '<p data-some=some>Слово</p>';
-                pattern.test(html).should.be.eql(true);
-            });
-
-            it('Не должны обнаруживаться неправильные кавычки при использовании одиночных атрибутов.', function () {
-                var pattern = regExps.wrongQuoteInAttribute();
-
-                var html = largeHtml + '<input disabled>';
-                pattern.test(html).should.be.eql(false);
-            });
-
-            it('Не должно обнаруживаться неправильное использование кавычек, если символ = есть в значении атрибута.', function () {
-                var pattern = regExps.wrongQuoteInAttribute();
-
-                var html = largeHtml + '<img src="https://lh4.ggpht.com/0E2SWOpJ_lO2-1KexN7m9E6-kn_q1GYRtNnYAgHX-zWDAkqSzcif73Z50CSkXkd6oOxx=h900">';
-                pattern.test(html).should.be.eql(false);
-            });
-
-
-        });
     });
-
-    //describe('alt в картинках', function () {
-    //    it('Должны обнаруживаться картинки без alt', function () {
-    //        var html = largeHtml + '<img src="">';
-    //        utils.findImagesWithoutAlt(html, false).should.be.eql(1);
-    //    });
-    //
-    //    it('Должны обнаруживаться картинки с пустым alt с двойными кавычками', function () {
-    //        var html = largeHtml + '<img src="" alt="">';
-    //        utils.findImagesWithoutAlt(html, false).should.be.eql(1);
-    //    });
-    //
-    //    it('Должны обнаруживаться картинки с пустым alt с одинаркными кавычками', function () {
-    //        var html = largeHtml + '<img src="" alt=\'\'>';
-    //        utils.findImagesWithoutAlt(html, false).should.be.eql(1);
-    //    });
-    //
-    //    it('Не должны обнаруживаться картинки без alt, если их нет', function () {
-    //        var html = largeHtml + '<img class="fly" src="start_fly.gif" alt="img">';
-    //        utils.findImagesWithoutAlt(html, false).should.be.eql(0);
-    //    });
-    //});
 });
 
 describe('Неправильная вложенность тегов.', function () {
@@ -362,17 +230,5 @@ describe('Неправильная вложенность тегов.', function
             var html = largeHtml + '\n<p>\n  Некий текст</p><table>Слово</table>';
             utils.getBlockInsideP(html, false).should.be.eql(0);
         });
-    });
-});
-
-describe('Обнаружение закрытия пустых тегов.', function () {
-    it('Должен обнаруживаться закрытый тег <meta>.', function () {
-        var html = largeHtml + '<meta someattr="test" />';
-
-        utils.getClosedEmptyElements(html, false).should.be.eql(1);
-    });
-
-    it('Не должны обнаруживаться закрытые пустые теги, если их нет.', function () {
-        utils.getClosedEmptyElements(largeHtml).should.be.eql(0);
     });
 });
